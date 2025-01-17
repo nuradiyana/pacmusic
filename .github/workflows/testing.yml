@@ -21,3 +21,11 @@ jobs:
           echo MINIO_DEV_ENDPOINT="$MINIO_DEV_ENDPOINT" > .env
           echo MINIO_DEV_ACCESS_KEY="$MINIO_DEV_ACCESS_KEY" >> .env
           echo MINIO_DEV_SECRET_KEY="$MINIO_DEV_SECRET_KEY" >> .env
+
+      - name: Build using docker compose
+        run: docker compose up --build --detach pacmusic-dev
+  
+      - name: Running simple testing
+        run: |
+          sleep 10
+          curl http://localhost:5000
