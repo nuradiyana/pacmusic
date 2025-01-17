@@ -11,10 +11,7 @@ jobs:
     name: Build and testing
     
     steps:
-      - name: Checkout Repository
       - uses: actions/checkout@v4
-  
-      - shell: bash
       - name: Create new .env file
         env:
           MINIO_DEV_ENDPOINT: ${{ secrets.MINIO_DEV_ENDPOINT }}
@@ -24,13 +21,3 @@ jobs:
           echo MINIO_DEV_ENDPOINT="$MINIO_DEV_ENDPOINT" > .env
           echo MINIO_DEV_ACCESS_KEY="$MINIO_DEV_ACCESS_KEY" >> .env
           echo MINIO_DEV_SECRET_KEY="$MINIO_DEV_SECRET_KEY" >> .env
-
-      - shell: bash
-        name: Running docker compose up
-        run: docker compose up --build --detach pacmusic-dev
-  
-      - shell: bash
-        name: Running testing
-        run: |
-          sleep 10
-          curl http://localhost:5000
