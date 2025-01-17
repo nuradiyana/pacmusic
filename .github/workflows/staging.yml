@@ -44,3 +44,8 @@ jobs:
             echo MINIO_DEV_SECRET_KEY="${{ secrets.MINIO_STG_SECRET_KEY }}" >> .env
 
             docker compose -f docker-compose.yaml up --build --detach pacmusic-stg
+  
+      - name: Running simple testing
+        run: |
+          sleep 10
+          curl ${{ secrets.STG_URL }}
