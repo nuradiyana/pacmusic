@@ -37,4 +37,4 @@ jobs:
             echo MINIO_DEV_ACCESS_KEY="${{ secrets.MINIO_STG_ACCESS_KEY }}" >> .env
             echo MINIO_DEV_SECRET_KEY="${{ secrets.MINIO_STG_SECRET_KEY }}" >> .env
 
-            docker compose -f docker-compose.yml up --build --detach pacmusic-stg
+            docker compose -f docker-compose.yaml up --build --detach pacmusic-stg
