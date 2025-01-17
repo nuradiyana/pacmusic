@@ -8,22 +8,33 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    name: Build and testing
+    name: Deploy to Staging
 
     env:
-     APP_STG_PORT: ${{ secrets.APP_STG_PORT }}
      APP_STG_PATH: ${{ vars.APP_STG_PATH }}
-     
-     MINIO_STG_ENDPOINT: ${{ secrets.MINIO_STG_ENDPOINT }}
-     MINIO_STG_ACCESS_KEY: ${{ secrets.MINIO_STG_ACCESS_KEY }}
-     MINIO_STG_SECRET_KEY: ${{ secrets.MINIO_STG_SECRET_KEY }}
     
     steps:
-      - name: executing remote ssh commands using password
+      - name: Running deploy script
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SSH_HOST_STAGING }}
           username: ${{ secrets.SSH_USER_NAME_STAGING }}
           key: ${{ secrets.SSH_PRIVATE_KEY_STAGING }}
           port: ${{ secrets.SSH_PORT }}
-          script: whoami
+          script: |
+            if [ -d $APP_STG_PATH ]; then
+              cd $APP_STG_PATH
+              docker compose -f docker-compose.yml down
+              git pull origin main
+            else
+              ssh-keyscan github.com >> ~/.ssh/known_hosts
+              git clone ${{ secrets.GIT_URL }} $APP_STG_PATH
+              cd $APP_STG_PATH
+            fi
+
+            echo APP_STG_PORT="${{ secrets.APP_STG_PORT }}" > .env
+            echo MINIO_STG_ENDPOINT="${{ secrets.MINIO_STG_ENDPOINT }}" >> .env
+            echo MINIO_DEV_ACCESS_KEY="${{ secrets.MINIO_STG_ACCESS_KEY }}" >> .env
+            echo MINIO_DEV_SECRET_KEY="${{ secrets.MINIO_STG_SECRET_KEY }}" >> .env
+
+            docker compose -f docker-compose.yml up --build --detach pacmusic-stg
