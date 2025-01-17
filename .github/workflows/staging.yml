@@ -24,7 +24,7 @@ jobs:
           script: |
             if [ -d $APP_STG_PATH ]; then
               cd $APP_STG_PATH
-              docker compose -f docker-compose.yml down
+              docker compose -f docker-compose.yaml down
               git pull origin main
             else
               ssh-keyscan github.com >> ~/.ssh/known_hosts
