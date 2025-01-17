@@ -9,9 +9,6 @@ jobs:
     runs-on: ubuntu-latest
 
     name: Deploy to Staging
-
-    env:
-     APP_STG_PATH: ${{ vars.APP_STG_PATH }}
     
     steps:
       - name: Running deploy script
@@ -22,9 +19,9 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY_STAGING }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            if [ -d $APP_STG_PATH ]; then
-              echo "Changing directory to $APP_STG_PATH"
-              cd $APP_STG_PATH
+            if [ -d ${{ vars.APP_STG_PATH }} ]; then
+              echo "Changing directory to ${{ vars.APP_STG_PATH }}"
+              cd ${{ vars.APP_STG_PATH }}
 
               echo "Stopping the running containers"
               docker compose -f docker-compose.yaml down
@@ -34,11 +31,11 @@ jobs:
             else
               ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-              echo "Clone the repository to $APP_STG_PATH"
-              git clone ${{ secrets.GIT_URL }} $APP_STG_PATH
+              echo "Clone the repository to ${{ vars.APP_STG_PATH }}"
+              git clone ${{ secrets.GIT_URL }} ${{ vars.APP_STG_PATH }}
 
-              echo "Changing directory to $APP_STG_PATH"
-              cd $APP_STG_PATH
+              echo "Changing directory to ${{ vars.APP_STG_PATH }}"
+              cd ${{ vars.APP_STG_PATH }}
             fi
 
             echo APP_STG_PORT="${{ secrets.APP_STG_PORT }}" > .env
