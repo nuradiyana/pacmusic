@@ -1,0 +1,28 @@
+name: Development Testing
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    name: Build and testing
+
+    env:
+     APP_STG_PORT: ${{ secrets.APP_STG_PORT }}
+     APP_STG_PATH: ${{ vars.APP_STG_PATH }}
+     
+     MINIO_STG_ENDPOINT: ${{ secrets.MINIO_STG_ENDPOINT }}
+     MINIO_STG_ACCESS_KEY: ${{ secrets.MINIO_STG_ACCESS_KEY }}
+     MINIO_STG_SECRET_KEY: ${{ secrets.MINIO_STG_SECRET_KEY }}
+    
+    steps:
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST_STAGING }}
+          username: ${{ secrets.SSH_USER_NAME_STAGING }}
+          key: ${{ secrets.SSH_PRIVATE_KEY_STAGING }}
+          script: whoami
