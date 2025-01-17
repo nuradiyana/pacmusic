@@ -17,6 +17,8 @@ jobs:
 
       - name: Build and push the image
         run: |
+          cd app/
+
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/pacmusic:${{github.ref_name}} .
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/pacmusic:latest .
           
