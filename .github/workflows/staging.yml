@@ -1,4 +1,4 @@
-name: Development Testing
+name: Deploy Staging 🚀
 
 on:
   push:
@@ -25,4 +25,5 @@ jobs:
           host: ${{ secrets.SSH_HOST_STAGING }}
           username: ${{ secrets.SSH_USER_NAME_STAGING }}
           key: ${{ secrets.SSH_PRIVATE_KEY_STAGING }}
+          port: ${{ secrets.SSH_PORT }}
           script: whoami
