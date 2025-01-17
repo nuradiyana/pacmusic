@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+
+# DEV
+  pacmusic-dev:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: pacmusic-dev
+    environment:
+      MINIO_ENDPOINT: ${MINIO_DEV_ENDPOINT}
+      MINIO_ACCESS_KEY: ${MINIO_DEV_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_DEV_SECRET_KEY}
+    ports:
+      - 5000:5000
+    networks:
+      - pacmusic-network
+
+# STG
+  pacmusic-stg:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: pacmusic-stg
+    environment:
+      MINIO_ENDPOINT: ${MINIO_STG_ENDPOINT}
+      MINIO_ACCESS_KEY: ${MINIO_STG_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_STG_SECRET_KEY}
+    ports:
+      - ${APP_STG_PORT}:5000
+    networks:
+      - pacmusic-network
+
+# PROD
+  pacmusic-prod:
+    image: "${APP_IMAGE}:${APP_TAG}"
+    container_name: pacmusic-prod
+    environment:
+      MINIO_ENDPOINT: ${MINIO_PROD_ENDPOINT}
+      MINIO_ACCESS_KEY: ${MINIO_PROD_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_PROD_SECRET_KEY}
+    ports:
+      - ${APP_PROD_PORT}:5000
+    networks:
+      - pacmusic-network
+
+networks:
+  pacmusic-network:
+    driver: bridge
+    name: pacmusic-network
+
+volumes:
+  minio-dev-vol:
+    driver: local
+    name: minio-dev-vol

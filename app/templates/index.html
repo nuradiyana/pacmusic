@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PacMusic - Music Player</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h1>PacMusic</h1>
+        </aside>
+        <main class="content">
+            <div class="music-list">
+                {% for name, url in music_files %}
+                <div class="music-item" data-url="{{ url }}">
+                    <div class="album-art">
+                        <img src="{{ url_for('static', filename='album_art.png') }}" alt="Album Art">
+                    </div>
+                    <div class="music-info">
+                        <p class="music-title" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ name }}</p>
+                    </div>
+                    <button class="play-button" onclick="playAudio(this.parentElement.getAttribute('data-url'), this.parentElement)">Play</button>
+                </div>
+                {% endfor %}
+            </div>
+        </main>
+        <div class="now-playing-bar">
+            <div class="button-container">
+                <button onclick="previousSong()">&#9664;&#9664;</button> <!-- Previous song -->
+                <button onclick="togglePlayPause()">&#9658; / &#10074;&#10074;</button> <!-- Play/Pause -->
+                <button onclick="nextSong()">&#9654;&#9654;</button> <!-- Next song -->
+            </div>
+            <div class="audio-player-container">
+                <audio id="audio-player" controls>
+                    <source src="" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+            <p id="now-playing">Now playing: None</p>
+        </div>
+        <script src="{{ url_for('static', filename='script.js') }}"></script>
+    </div>
+</body>
+</html>
