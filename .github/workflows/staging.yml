@@ -23,12 +23,21 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             if [ -d $APP_STG_PATH ]; then
+              echo "Changing directory to $APP_STG_PATH"
               cd $APP_STG_PATH
+
+              echo "Stopping the running containers"
               docker compose -f docker-compose.yaml down
+              
+              echo "Pulling the latest changes from the repository"
               git pull origin main
             else
               ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+              echo "Clone the repository to $APP_STG_PATH"
               git clone ${{ secrets.GIT_URL }} $APP_STG_PATH
+
+              echo "Changing directory to $APP_STG_PATH"
               cd $APP_STG_PATH
             fi
 
