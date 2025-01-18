@@ -43,6 +43,16 @@ services:
       - ${APP_STG_PORT_2}:5000
     networks:
       - pacmusic-network
+  
+  pacmusic-stg-balancer:
+    image: nginx:alpine
+    container_name: pacmusic-stg-balancer
+    volumes:
+      - ./.docker/nginx/staging.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+    networks:
+      - pacmusic-network 
 
 # PROD
   pacmusic-prod-1:
