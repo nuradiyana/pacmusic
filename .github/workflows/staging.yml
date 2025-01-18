@@ -40,7 +40,8 @@ jobs:
               cd ${{ vars.APP_STG_PATH }}
             fi
 
-            echo APP_STG_PORT="${{ secrets.APP_STG_PORT }}" > .env
+            echo APP_STG_PORT_1="${{ secrets.APP_STG_PORT_1 }}" > .env
+            echo APP_STG_PORT_2="${{ secrets.APP_STG_PORT_2 }}" >> .env
             echo MINIO_STG_ENDPOINT="${{ secrets.MINIO_STG_ENDPOINT }}" >> .env
             echo MINIO_STG_ACCESS_KEY="${{ secrets.MINIO_STG_ACCESS_KEY }}" >> .env
             echo MINIO_STG_SECRET_KEY="${{ secrets.MINIO_STG_SECRET_KEY }}" >> .env
@@ -49,5 +50,5 @@ jobs:
   
       - name: Running simple testing
         run: |
-          sleep 10
-          curl ${{ secrets.STG_URL }}
+          sleep 5
+          curl http://${{ secrets.SSH_HOST_STAGING }}:${{ secrets.APP_STG_PORT_1 }}
