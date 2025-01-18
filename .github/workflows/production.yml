@@ -49,7 +49,6 @@ jobs:
             echo APP_IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/pacmusic" >> .env
             echo APP_TAG="latest" >> .env
 
-            docker compose -f docker-compose.yaml up --build --detach --no-recreate pacmusic-proxy
             docker compose -f docker-compose.yaml up --build --detach pacmusic-prod-1 pacmusic-prod-2 pacmusic-prod-balancer
   
       - name: Running simple testing
