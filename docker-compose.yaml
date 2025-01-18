@@ -65,7 +65,7 @@ services:
       MINIO_ACCESS_KEY: ${MINIO_PROD_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_PROD_SECRET_KEY}
     ports:
-      - ${APP_PROD_PORT_1}:5000
+      - ${APP_PROD_PORT_2}:5000
     networks:
       - pacmusic-network
 
