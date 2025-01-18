@@ -26,7 +26,7 @@ jobs:
               cd ${{ vars.APP_PROD_PATH }}
 
               echo "Stopping the running containers"
-              docker compose -f docker-compose.yaml down pacmusic-prod-1 pacmusic-prod-2
+              docker compose -f docker-compose.yaml down pacmusic-prod-1 pacmusic-prod-2 --remove-orphans
               
               echo "Pulling the latest changes from the repository"
               git pull origin main
@@ -40,7 +40,8 @@ jobs:
               cd ${{ vars.APP_PROD_PATH }}
             fi
 
-            echo APP_PROD_PORT="${{ secrets.APP_PROD_PORT }}" > .env
+            echo APP_PROD_PORT_1="${{ secrets.APP_PROD_PORT_1 }}" > .env
+            echo APP_PROD_PORT_2="${{ secrets.APP_PROD_PORT_2 }}" >> .env
             echo MINIO_PROD_ENDPOINT="${{ secrets.MINIO_PROD_ENDPOINT }}" >> .env
             echo MINIO_PROD_ACCESS_KEY="${{ secrets.MINIO_PROD_ACCESS_KEY }}" >> .env
             echo MINIO_PROD_SECRET_KEY="${{ secrets.MINIO_PROD_SECRET_KEY }}" >> .env
@@ -53,4 +54,4 @@ jobs:
       - name: Running simple testing
         run: |
           sleep 10
-          curl ${{ secrets.PROD_URL }}
+          curl http://${{ secrets.SSH_HOST_PRODUCTION}}:${{ secrets.APP_PROD_PORT_1 }}
