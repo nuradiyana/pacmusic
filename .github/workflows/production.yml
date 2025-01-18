@@ -26,7 +26,7 @@ jobs:
               cd ${{ vars.APP_PROD_PATH }}
 
               echo "Stopping the running containers"
-              docker compose -f docker-compose.yaml down pacmusic-prod
+              docker compose -f docker-compose.yaml down pacmusic-prod-1 pacmusic-prod-2
               
               echo "Pulling the latest changes from the repository"
               git pull origin main
@@ -48,7 +48,7 @@ jobs:
             echo APP_IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/pacmusic" >> .env
             echo APP_TAG="latest" >> .env
 
-            docker compose -f docker-compose.yaml up --build --detach pacmusic-prod
+            docker compose -f docker-compose.yaml up --build --detach pacmusic-prod-1 pacmusic-prod-2
   
       - name: Running simple testing
         run: |

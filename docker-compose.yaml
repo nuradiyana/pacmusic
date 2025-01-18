@@ -1,5 +1,3 @@
-version: '3'
-
 services:
 
 # DEV
@@ -18,30 +16,56 @@ services:
       - pacmusic-network
 
 # STG
-  pacmusic-stg:
+  pacmusic-stg-1:
     build:
       context: ./app
       dockerfile: Dockerfile
-    container_name: pacmusic-stg
+    container_name: pacmusic-stg-1
     environment:
       MINIO_ENDPOINT: ${MINIO_STG_ENDPOINT}
       MINIO_ACCESS_KEY: ${MINIO_STG_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_STG_SECRET_KEY}
     ports:
-      - ${APP_STG_PORT}:5000
+      - ${APP_STG_PORT_1}:5000
+    networks:
+      - pacmusic-network
+  
+  pacmusic-stg-2:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: pacmusic-stg-2
+    environment:
+      MINIO_ENDPOINT: ${MINIO_STG_ENDPOINT}
+      MINIO_ACCESS_KEY: ${MINIO_STG_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_STG_SECRET_KEY}
+    ports:
+      - ${APP_STG_PORT_2}:5000
     networks:
       - pacmusic-network
 
 # PROD
-  pacmusic-prod:
+  pacmusic-prod-1:
     image: "${APP_IMAGE}:${APP_TAG}"
-    container_name: pacmusic-prod
+    container_name: pacmusic-prod-1
     environment:
       MINIO_ENDPOINT: ${MINIO_PROD_ENDPOINT}
       MINIO_ACCESS_KEY: ${MINIO_PROD_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_PROD_SECRET_KEY}
     ports:
-      - ${APP_PROD_PORT}:5000
+      - ${APP_PROD_PORT_1}:5000
+    networks:
+      - pacmusic-network
+  
+  pacmusic-prod-2:
+    image: "${APP_IMAGE}:${APP_TAG}"
+    container_name: pacmusic-prod-2
+    environment:
+      MINIO_ENDPOINT: ${MINIO_PROD_ENDPOINT}
+      MINIO_ACCESS_KEY: ${MINIO_PROD_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_PROD_SECRET_KEY}
+    ports:
+      - ${APP_PROD_PORT_1}:5000
     networks:
       - pacmusic-network
 
