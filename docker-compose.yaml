@@ -62,8 +62,6 @@ services:
     container_name: pacmusic-stg-balancer
     volumes:
       - ./docker/nginx/staging.conf:/etc/nginx/conf.d/default.conf
-    ports:
-      - 8001:80
     networks:
       - pacmusic-network 
 
@@ -98,8 +96,6 @@ services:
     container_name: pacmusic-prod-balancer
     volumes:
       - ./docker/nginx/production.conf:/etc/nginx/conf.d/default.conf
-    ports:
-      - 8000:80
     networks:
       - pacmusic-network 
 
