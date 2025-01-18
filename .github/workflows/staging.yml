@@ -15,11 +15,13 @@ jobs:
     steps:
       - name: Running deploy script
         uses: appleboy/ssh-action@v1.2.0
+        env:
+          SSH_PORT: ${{ secrets.SSH_PORT_STAGING }}
         with:
           host: ${{ secrets.SSH_HOST_STAGING }}
           username: ${{ secrets.SSH_USER_NAME_STAGING }}
           key: ${{ secrets.SSH_PRIVATE_KEY_STAGING }}
-          port: ${{ secrets.SSH_PORT_STAGING }}
+          port: "${{ env.SSH_PORT }}"
           script: |
             if [ -d ${{ vars.APP_STG_PATH }} ]; then
               echo "Changing directory to ${{ vars.APP_STG_PATH }}"
