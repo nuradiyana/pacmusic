@@ -19,6 +19,7 @@ jobs:
           host: ${{ secrets.SSH_HOST_STAGING }}
           username: ${{ secrets.SSH_USER_NAME_STAGING }}
           key: ${{ secrets.SSH_PRIVATE_KEY_STAGING }}
+          port: ${{ secrets.SSH_PORT_STAGING }}
           script: |
             if [ -d ${{ vars.APP_STG_PATH }} ]; then
               echo "Changing directory to ${{ vars.APP_STG_PATH }}"
