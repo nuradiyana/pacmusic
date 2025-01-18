@@ -15,14 +15,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Create new .env file
-        env:
-          MINIO_DEV_ENDPOINT: ${{ secrets.MINIO_DEV_ENDPOINT }}
-          MINIO_DEV_ACCESS_KEY: ${{ secrets.MINIO_DEV_ACCESS_KEY }}
-          MINIO_DEV_SECRET_KEY: ${{ secrets.MINIO_DEV_SECRET_KEY }}
         run: |
-          echo MINIO_DEV_ENDPOINT="$MINIO_DEV_ENDPOINT" > .env
-          echo MINIO_DEV_ACCESS_KEY="$MINIO_DEV_ACCESS_KEY" >> .env
-          echo MINIO_DEV_SECRET_KEY="$MINIO_DEV_SECRET_KEY" >> .env
+          echo MINIO_DEV_ENDPOINT="${{ secrets.MINIO_DEV_ENDPOINT }}" > .env
+          echo MINIO_DEV_ACCESS_KEY="${{ secrets.MINIO_DEV_ACCESS_KEY }}" >> .env
+          echo MINIO_DEV_SECRET_KEY="${{ secrets.MINIO_DEV_SECRET_KEY }}" >> .env
 
       - name: Build using docker compose
         run: docker compose up --build --detach pacmusic-dev
