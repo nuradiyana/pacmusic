@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
 
     name: Deploy to Staging
+
+    environment: staging
     
     steps:
       - name: Running deploy script
@@ -24,7 +26,7 @@ jobs:
               cd ${{ vars.APP_STG_PATH }}
 
               echo "Stopping the running containers"
-              docker compose -f docker-compose.yaml down
+              docker compose -f docker-compose.yaml down pacmusic-stg
               
               echo "Pulling the latest changes from the repository"
               git pull origin main

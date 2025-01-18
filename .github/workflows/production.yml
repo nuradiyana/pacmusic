@@ -1,0 +1,56 @@
+name: Deploy Production 🚀
+
+on:
+  release:
+    types: [ "published", "edited" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    name: Deploy to Staging
+
+    environment: production
+    
+    steps:
+      - name: Running deploy script
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST_PRODUCTION }}
+          username: ${{ secrets.SSH_USER_NAME_PRODUCTION }}
+          key: ${{ secrets.SSH_PRIVATE_KEY_PRODUCTION }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            if [ -d ${{ vars.APP_PROD_PATH }} ]; then
+              echo "Changing directory to ${{ vars.APP_PROD_PATH }}"
+              cd ${{ vars.APP_PROD_PATH }}
+
+              echo "Stopping the running containers"
+              docker compose -f docker-compose.yaml down pacmusic-prod
+              
+              echo "Pulling the latest changes from the repository"
+              git pull origin main
+            else
+              ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+              echo "Clone the repository to ${{ vars.APP_PROD_PATH }}"
+              git clone ${{ secrets.GIT_URL }} ${{ vars.APP_PROD_PATH }}
+
+              echo "Changing directory to ${{ vars.APP_PROD_PATH }}"
+              cd ${{ vars.APP_PROD_PATH }}
+            fi
+
+            echo APP_PROD_PORT="${{ secrets.APP_PROD_PORT }}" > .env
+            echo MINIO_PROD_ENDPOINT="${{ secrets.MINIO_PROD_ENDPOINT }}" >> .env
+            echo MINIO_PROD_ACCESS_KEY="${{ secrets.MINIO_PROD_ACCESS_KEY }}" >> .env
+            echo MINIO_PROD_SECRET_KEY="${{ secrets.MINIO_PROD_SECRET_KEY }}" >> .env
+
+            echo APP_IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/pacmusic" >> .env
+            echo APP_TAG="latest" >> .env
+
+            docker compose -f docker-compose.yaml up --build --detach pacmusic-prod
+  
+      - name: Running simple testing
+        run: |
+          sleep 10
+          curl ${{ secrets.PROD_URL }}
